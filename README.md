@@ -1,5 +1,5 @@
-#HisYar
-#A history agent that uses an llm and a embedding model to answer questions about history!
+# HisYar
+## A history agent that uses an llm and a embedding model to answer questions about history!
 
 You can use the GetEmbedding file to get the embedding vectors of lines of a file 
 You can also choose to create a sentence for each [minLine-maxLine] of lines and the jump variable to specify how many lines to jump between every two sentences.

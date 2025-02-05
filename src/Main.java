@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 public class Main {
-    public static final String yourApiKey = "Z+Rc3mhEisordgwx1O/Mrw==N0jhww8UFlB7nYLS"; // replace with your Api-ninjas key! (Create in : https://www.api-ninjas.com/).
+    public static final String yourApiKey = "YOUR_API_KEY"; // replace with your Api-ninjas key! (Create in : https://www.api-ninjas.com/).
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your prompt: ");

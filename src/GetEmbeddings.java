@@ -30,7 +30,7 @@ public class GetEmbeddings {
                     event = event.replace("\\", "\\\\");
                     event = event.replace("\"", "\\\"");
                     Prompt eventPrompt = new Prompt(event);
-                    eventPrompt.query("embeddings", "nomic-embed-text");
+                    eventPrompt.query("embeddings", Main.embeddingModel);
                     count++;
                     if (count % 100 == 0)
                         System.out.println(count + " finished");

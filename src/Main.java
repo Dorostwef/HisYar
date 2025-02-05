@@ -7,13 +7,15 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 public class Main {
-    public static final String yourApiKey = "YOUR_API_KEY"; // replace with your Api-ninjas key! (Create in : https://www.api-ninjas.com/).
+    static public String embeddingModel = "nomic-embed-text";
+    static public String llmModel = "llama3.2:3b";
+    static public String yourApiKey = "YOUR_API_KEY"; // replace with your Api-ninjas key! (Create in : https://www.api-ninjas.com/).
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your prompt: ");
         String input = scanner.nextLine();
         Prompt prompt = new Prompt(input);
-        prompt.query("embeddings", "nomic-embed-text");
+        prompt.query("embeddings", embeddingModel);
         String knowledgeVectorString = prompt.getString();
         String[] knowledgeVectorStrings = (knowledgeVectorString.split(","));
         double[] vector = Arrays.stream(knowledgeVectorStrings).mapToDouble(Double::parseDouble).toArray();
@@ -48,38 +50,40 @@ public class Main {
         for (Knowledge knowledge : book2Knowledges.getDatas()) {
             knowledges.add(knowledge);
         }
-        Prompt subjectPrompt = new Prompt("Write important keywords in this text each one in a line alone without saying anything else and without indexing and at most 6 words : \\\"" + input + "\\\"");
-        subjectPrompt.query("generate", "llama3.2:3b");
-//        subjectPrompt.Print();
+        if (!yourApiKey.equals("YOUR_API_KEY")) {
+            Prompt subjectPrompt = new Prompt("Write important keywords in this text each one in a line alone without saying anything else and without indexing and at most 6 words : \\\"" + input + "\\\"");
+            subjectPrompt.query("generate", llmModel);
+            //subjectPrompt.Print();
 
-        String keywords = subjectPrompt.getString();
-        String[] allKeywords = keywords.split("\n|\t| |.|,");
-        HashSet<String> datas = new HashSet<>();
-        for (String keyword : allKeywords) {
-            if (keyword.isEmpty())
-                continue;
-            keyword = keyword.replace(" ", "+");
-            HttpCall httpCall = new HttpCall("https://api.api-ninjas.com/v1/historicalevents?text=" + keyword, "");
-            HttpResponse<String> apiResponse = httpCall.get("X-Api-Key", yourApiKey, "web");
-            JSONArray knowledgesArray = (JSONArray) JSONUtils.stringToJSON(apiResponse.body());
-            for (Object knowledge : knowledgesArray) {
-                JSONObject jsonKnowledge = (JSONObject) knowledge;
-                int year = Integer.parseInt((String)jsonKnowledge.get("year"));
-                String yearName;
-                if (year < 0) {
-                    yearName = -year + " BC";
-                } else {
-                    yearName = year + " AD";
+            String keywords = subjectPrompt.getString();
+            String[] allKeywords = keywords.split("\n|\t| |.|,");
+            HashSet<String> datas = new HashSet<>();
+            for (String keyword : allKeywords) {
+                if (keyword.isEmpty())
+                    continue;
+                keyword = keyword.replace(" ", "+");
+                HttpCall httpCall = new HttpCall("https://api.api-ninjas.com/v1/historicalevents?text=" + keyword, "");
+                HttpResponse<String> apiResponse = httpCall.get("X-Api-Key", yourApiKey, "web");
+                JSONArray knowledgesArray = (JSONArray) JSONUtils.stringToJSON(apiResponse.body());
+                for (Object knowledge : knowledgesArray) {
+                    JSONObject jsonKnowledge = (JSONObject) knowledge;
+                    int year = Integer.parseInt((String) jsonKnowledge.get("year"));
+                    String yearName;
+                    if (year < 0) {
+                        yearName = -year + " BC";
+                    } else {
+                        yearName = year + " AD";
+                    }
+                    String stringKnowledge = jsonKnowledge.get("event") + " happend in year " + yearName + " and month " + jsonKnowledge.get("month") + " and day " + jsonKnowledge.get("day");
+                    stringKnowledge = stringKnowledge.replace("\n", "\\n");
+                    stringKnowledge = stringKnowledge.replace("\"", "\\\"");
+                    datas.add(stringKnowledge);
                 }
-                String stringKnowledge = jsonKnowledge.get("event") + " happend in year " + yearName + " and month " + jsonKnowledge.get("month") + " and day " + jsonKnowledge.get("day");
-                stringKnowledge = stringKnowledge.replace("\n", "\\n");
-                stringKnowledge = stringKnowledge.replace("\"", "\\\"");
-                datas.add(stringKnowledge);
             }
-        }
-        for (String stringKnowledge : datas) {
-            Knowledge event = new Knowledge(stringKnowledge, Knowledge.getEmbed(stringKnowledge));
-            knowledges.add(event);
+            for (String stringKnowledge : datas) {
+                Knowledge event = new Knowledge(stringKnowledge, Knowledge.getEmbed(stringKnowledge));
+                knowledges.add(event);
+            }
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -93,7 +97,7 @@ public class Main {
         promptString += "Answer the following sentence using only the knowledge above and pretend like you knew the knowledge already : ";
         promptString += input;
         Prompt finalPrompt = new Prompt(promptString);
-        finalPrompt.query("generate", "llama3.2:3b");
+        finalPrompt.query("generate", llmModel);
         finalPrompt.Print();
     }
 }

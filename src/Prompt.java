@@ -44,21 +44,31 @@ public class Prompt {
             } else {
                 String body = answer.body();
                 String[] responses = body.split("\n");
+                StringBuilder stringBuilder = new StringBuilder();
+                boolean thinking = false;
                 for (String response : responses) {
                     if (type.equals("embeddings")) {
                         JSONArray jsonArray = new JSONArray();
                         jsonArray = (JSONArray) ((JSONObject)JSONUtils.stringToJSON(response)).get("embedding");
                         for (int i = 0; i < jsonArray.size(); i++) {
-                            all += (jsonArray.get(i));
+                            stringBuilder.append (jsonArray.get(i));
                             if (i != jsonArray.size() - 1) {
-                                all += ",";
+                                stringBuilder.append(",");
                             }
                         }
                     }
                     if (type.equals("generate")) {
-                        all += ((JSONObject)JSONUtils.stringToJSON(response)).get("response");
+                        String responseString = ((JSONObject)JSONUtils.stringToJSON(response)).get("response").toString();
+                        if (responseString.equals("<think>")) {
+                            thinking = true;
+                        } else if (responseString.equals("</think>")) {
+                            thinking = false;
+                        } else if (!thinking) {
+                            stringBuilder.append(responseString);
+                        }
                     }
                 }
+                all = stringBuilder.toString();
             }
         }
         return all;

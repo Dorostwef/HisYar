@@ -20,7 +20,7 @@ public class Knowledge {
 
     public static double[] getEmbed(String event) {
         Prompt knowledgePrompt = new Prompt(event);
-        knowledgePrompt.query("embeddings", "nomic-embed-text");
+        knowledgePrompt.query("embeddings", Main.embeddingModel);
         String knowledgeVectorString = knowledgePrompt.getString();
         String[] knowledgeVectorStrings = ((String[])knowledgeVectorString.split(","));
         return Arrays.stream(knowledgeVectorStrings).mapToDouble(Double::parseDouble).toArray();

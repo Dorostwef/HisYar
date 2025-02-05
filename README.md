@@ -1,5 +1,5 @@
 # HisYar
-## A history agent that uses an llm and a embedding model to answer questions about history!
+## A history agent that uses a llm and an embedding model to answer questions about history!
 
 You can use the GetEmbedding file to get the embedding vectors of lines of a file.
 

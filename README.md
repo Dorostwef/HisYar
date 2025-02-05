@@ -8,3 +8,5 @@ You can also choose to create a sentence for each [minLine-maxLine] of lines and
 You can also use the ApiGet file to get some historical events from an api that gets them from wikipedia (already done and in the api.txt file).
 
 For this one you need to have llama3.2:3b (you can change the size in the code.) and nomic-embed-text (you can change this too (not tested)).
+
+And you need json-simple-1.1.

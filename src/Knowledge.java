@@ -2,7 +2,9 @@ import java.util.Arrays;
 
 public class Knowledge {
     private String event;
+
     private double[] vector;
+
     private double distance;
 
     public Knowledge(String event, double[] vector) {

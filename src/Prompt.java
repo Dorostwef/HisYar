@@ -7,11 +7,9 @@ public class Prompt {
     private String content;
     private HttpResponse<String> answer;
     private String type;
-    private String model;
 
     public void query (String type, String model) {
         this.type = type;
-        this.model = model;
         HttpCall httpCall = new HttpCall("http://localhost:11434/api/" + type, "{\"model\": \"" + model + "\", \"prompt\": \"" + content + "\"}");
         answer = httpCall.get("", "", "local");
     }

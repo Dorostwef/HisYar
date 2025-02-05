@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class GetEmbeddings {
     static int minLine = 1, maxLine = 1, jump = 1;
+
     public static void main(String[] args) {
         int count = 0;
         try {

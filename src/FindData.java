@@ -1,9 +1,5 @@
-import javax.xml.crypto.Data;
 import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class FindData {

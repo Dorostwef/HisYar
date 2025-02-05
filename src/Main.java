@@ -10,6 +10,7 @@ public class Main {
     static public String embeddingModel = "nomic-embed-text";
     static public String llmModel = "llama3.2:3b";
     static public String yourApiKey = "YOUR_API_KEY"; // replace with your Api-ninjas key! (Create in : https://www.api-ninjas.com/).
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your prompt: ");

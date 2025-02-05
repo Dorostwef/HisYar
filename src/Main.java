@@ -1,9 +1,7 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.xml.crypto.Data;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -17,31 +15,31 @@ public class Main {
         Prompt prompt = new Prompt(input);
         prompt.query("embeddings", "nomic-embed-text");
         String knowledgeVectorString = prompt.getString();
-        String[] knowledgeVectorStrings = ((String[])knowledgeVectorString.split(","));
+        String[] knowledgeVectorStrings = (knowledgeVectorString.split(","));
         double[] vector = Arrays.stream(knowledgeVectorStrings).mapToDouble(Double::parseDouble).toArray();
         FindData findData = new FindData(vector);
-        DataSet knowledges = null, bookKnowledges = null;
+        DataSet knowledges, bookKnowledges;
         Searcher searcher = new Searcher(findData, "api.csv");
-        Searcher bookSearcher = new Searcher(findData, "book1.csv");
+        Searcher book1Searcher = new Searcher(findData, "book1.csv");
         Searcher book2Searcher = new Searcher(findData, "book2.csv");
         Thread thread = new Thread(searcher);
         thread.setPriority(Thread.NORM_PRIORITY);
-        Thread bookThread = new Thread(bookSearcher);
-        bookThread.setPriority(Thread.MAX_PRIORITY);
+        Thread book1Thread = new Thread(book1Searcher);
+        book1Thread.setPriority(Thread.MIN_PRIORITY);
         Thread book2Thread = new Thread(book2Searcher);
-        book2Thread.setPriority(Thread.MIN_PRIORITY);
+        book2Thread.setPriority(Thread.MAX_PRIORITY);
         try {
             thread.start();
-            bookThread.start();
+            book1Thread.start();
             book2Thread.start();
             thread.join();
-            bookThread.join();
+            book1Thread.join();
             book2Thread.join();
         } catch (Exception e) {
             e.printStackTrace();
         }
         knowledges = searcher.getDataSet();
-        bookKnowledges = bookSearcher.getDataSet();
+        bookKnowledges = book1Searcher.getDataSet();
         DataSet book2Knowledges = book2Searcher.getDataSet();
         knowledges.setK(35);
         for (Knowledge knowledge : bookKnowledges.getDatas()) {
@@ -84,14 +82,15 @@ public class Main {
             knowledges.add(event);
         }
 
-        String promptString = "";
+        StringBuilder stringBuilder = new StringBuilder();
         for (Knowledge knowledge : knowledges.getDatas()) {
 //            System.out.println(knowledge.getEvent());
 //            System.out.println(knowledge.getDistance());
-            promptString += knowledge.getEvent();
-            promptString += "\\n";
+            stringBuilder.append(knowledge.getEvent());
+            stringBuilder.append("\\n");
         }
-        promptString += "Answer the following sentence using only the knowledge above : ";
+        String promptString = stringBuilder.toString();
+        promptString += "Answer the following sentence using only the knowledge above and pretend like you knew the knowledge already : ";
         promptString += input;
         Prompt finalPrompt = new Prompt(promptString);
         finalPrompt.query("generate", "llama3.2:3b");

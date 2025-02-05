@@ -36,7 +36,7 @@ public class Main {
             book1Thread.join();
             book2Thread.join();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         knowledges = searcher.getDataSet();
         bookKnowledges = book1Searcher.getDataSet();

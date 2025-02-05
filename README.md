@@ -3,7 +3,7 @@
 
 You can use the GetEmbedding file to get the embedding vectors of lines of a file.
 
-You can also choose to create a sentence for each [minLine-maxLine] of lines and the jump variable to specify how many lines to jump between every two sentences.
+You can also choose to create a sentence for each [minLine-maxLine] of lines and the jump variable to specify how many lines to jump between the start of every two consecutive sentences.
 
 for api the recommended settings is minyear=1, maxLine=1, jump=1
 

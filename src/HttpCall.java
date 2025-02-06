@@ -4,8 +4,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class HttpCall {
-    private String httpUrl;
-    private String jsonInputString;
+    private final String httpUrl;
+    private final String jsonInputString;
 
     public HttpCall(String httpUrl, String jsonInputString) {
         this.httpUrl = httpUrl;
@@ -22,7 +22,7 @@ public class HttpCall {
                         .header("Content-Type", "application/json")
                         .POST(HttpRequest.BodyPublishers.ofString(jsonInputString))
                         .build();
-            } else if (!headerKey.equals("")){
+            } else if (!headerKey.isEmpty()){
                 request = HttpRequest.newBuilder().
                         uri(new URI(httpUrl))
                         .header("Content-Type", "application/json")
@@ -38,7 +38,7 @@ public class HttpCall {
             }
             return client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return null;
     }

@@ -1,7 +1,7 @@
 public class Searcher implements Runnable {
     private DataSet dataSet;
-    private FindData findData;
-    private String fileName;
+    private final FindData findData;
+    private final String fileName;
     public Searcher(FindData findData, String fileName) {
         this.findData = findData;
         this.fileName = fileName;

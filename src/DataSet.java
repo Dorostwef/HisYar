@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class DataSet {
-    private ArrayList<Knowledge> datas = new ArrayList<>();
+    private final ArrayList<Knowledge> datas = new ArrayList<>();
     private int k;
     double[] vector;
     public DataSet(int k, double[] vector) {
@@ -16,8 +16,8 @@ public class DataSet {
         } else if (datas.size() < k) {
             datas.add(newKnowledge);
         } else {
-            if (newKnowledge.getDistance() > datas.get(datas.size() - 1).getDistance()) {
-                datas.remove(datas.size() - 1);
+            if (newKnowledge.getDistance() > datas.getLast().getDistance()) {
+                datas.removeLast();
                 datas.add(newKnowledge);
             } else {
                 return;

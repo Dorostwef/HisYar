@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class FindData {
-    private double[] vector;
+    private final double[] vector;
 
     public FindData(double[] vector) {
         this.vector = vector;
@@ -30,19 +30,15 @@ public class FindData {
             while (scanner.hasNextLine()) {
                 knowledge = scanner.nextLine();
                 knowledgeVectorString = scanner.nextLine();
-                String[] knowledgeVectorStrings = ((String[])knowledgeVectorString.split(","));
+                String[] knowledgeVectorStrings = (knowledgeVectorString.split(","));
                 double[] knowledgeVector = Arrays.stream(knowledgeVectorStrings).mapToDouble(Double::parseDouble).toArray();
                 Knowledge newKnowledge = new Knowledge(knowledge, knowledgeVector);
                 closest.add(newKnowledge);
             }
             return closest;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return null;
-    }
-
-    public double getVector(int index) {
-        return vector[index];
     }
 }

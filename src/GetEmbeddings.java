@@ -2,8 +2,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GetEmbeddings {
     static int minLine = 1, maxLine = 1, jump = 1;
@@ -12,8 +10,6 @@ public class GetEmbeddings {
         int count = 0;
         try {
             File knolwedgeFile = new File("api.txt");
-            File csvFile = new File("api.csv");
-            csvFile.createNewFile();
             ArrayList<String> lines = new ArrayList<>();
             FileWriter csvWriter = new FileWriter("api.csv");
             Scanner scanner = new Scanner(knolwedgeFile);
@@ -23,11 +19,13 @@ public class GetEmbeddings {
             }
             for (int cnt = minLine; cnt <= maxLine; cnt++) {
                 for (int i = 0; i <= lines.size() - cnt; i += jump) {
-                    String event = "";
+                    String event;
+                    StringBuilder stringBuilder = new StringBuilder();
                     for (int j = i; j < i + cnt; j++) {
-                        event += lines.get(j);
-                        event += " ";
+                        stringBuilder.append(lines.get(j));
+                        stringBuilder.append(" ");
                     }
+                    event = stringBuilder.toString();
                     event = event.replace("\\", "\\\\");
                     event = event.replace("\"", "\\\"");
                     Prompt eventPrompt = new Prompt(event);
@@ -49,7 +47,7 @@ public class GetEmbeddings {
             scanner.close();
             csvWriter.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         System.out.println("all " + count + " finished");
     }

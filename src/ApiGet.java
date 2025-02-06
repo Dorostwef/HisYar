@@ -1,7 +1,6 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -10,17 +9,13 @@ import static java.lang.Thread.sleep;
 
 public class ApiGet {
     public static String inLine (String s) {
-        String replaced = s.replace("\n", "\\n");
-        return replaced;
+        return s.replace("\n", "\\n");
     }
     public static String outLine (String s) {
-        String replaced = s.replace("\\n", "\n");
-        return replaced;
+        return s.replace("\\n", "\n");
     }
     public static void main(String[] args) {
         try {
-            File apiText = new File("api.txt");
-            apiText.createNewFile();
             FileWriter fileWriter = new FileWriter("api.txt");
             for (int year = -500; year <= 2025; year++) {
                 HttpCall apiCall = new HttpCall("https://events.historylabs.io/year/" + year, "");
@@ -40,7 +35,7 @@ public class ApiGet {
                 }
                 for (int i = 0; i < count; i++) {
                     JSONObject event = (JSONObject) events.get(i);
-                    fileWriter.write(inLine(((String) event.get("content")) + " happened in " + ((String) event.get("date")) + " " + yearName));
+                    fileWriter.write(inLine((event.get("content")) + " happened in " + (event.get("date")) + " " + yearName));
                     fileWriter.write("\n");
                 }
                 if (year % 5 == 0) {
@@ -49,7 +44,7 @@ public class ApiGet {
                 try {
                     sleep(230);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
             }
             fileWriter.close();

@@ -3,7 +3,7 @@ import java.util.Arrays;
 public class Knowledge {
     private String event;
 
-    private double[] vector;
+    private final double[] vector;
 
     private double distance;
 
@@ -12,19 +12,12 @@ public class Knowledge {
         this.vector = vector;
     }
 
-    public double[] getVector() {
-        return vector;
-    }
-
-    public double getIndex(int index) {
-        return vector[index];
-    }
 
     public static double[] getEmbed(String event) {
         Prompt knowledgePrompt = new Prompt(event);
         knowledgePrompt.query("embeddings", Main.embeddingModel);
         String knowledgeVectorString = knowledgePrompt.getString();
-        String[] knowledgeVectorStrings = ((String[])knowledgeVectorString.split(","));
+        String[] knowledgeVectorStrings = (knowledgeVectorString.split(","));
         return Arrays.stream(knowledgeVectorStrings).mapToDouble(Double::parseDouble).toArray();
     }
 
@@ -32,7 +25,7 @@ public class Knowledge {
         return event;
     }
 
-    public void setEvent() {
+    public void setEvent(String event) {
         this.event = event;
     }
 

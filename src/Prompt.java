@@ -4,7 +4,7 @@ import org.json.simple.JSONObject;
 import java.net.http.HttpResponse;
 
 public class Prompt {
-    private String content;
+    private final String content;
     private HttpResponse<String> answer;
     private String type;
 
@@ -32,7 +32,7 @@ public class Prompt {
     }
 
     public String getString () {
-        String all = "";
+        String all;
         if (answer == null) {
             all = "The prompt is not queried yet";
         } else {
@@ -46,8 +46,7 @@ public class Prompt {
                 boolean thinking = false;
                 for (String response : responses) {
                     if (type.equals("embeddings")) {
-                        JSONArray jsonArray = new JSONArray();
-                        jsonArray = (JSONArray) ((JSONObject)JSONUtils.stringToJSON(response)).get("embedding");
+                        JSONArray jsonArray = (JSONArray) ((JSONObject)JSONUtils.stringToJSON(response)).get("embedding");
                         for (int i = 0; i < jsonArray.size(); i++) {
                             stringBuilder.append (jsonArray.get(i));
                             if (i != jsonArray.size() - 1) {

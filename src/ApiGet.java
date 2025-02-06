@@ -11,9 +11,6 @@ public class ApiGet {
     public static String inLine (String s) {
         return s.replace("\n", "\\n");
     }
-    public static String outLine (String s) {
-        return s.replace("\\n", "\n");
-    }
     public static void main(String[] args) {
         try {
             FileWriter fileWriter = new FileWriter("api.txt");

@@ -67,17 +67,7 @@ public class Main {
                 HttpResponse<String> apiResponse = httpCall.get("X-Api-Key", yourApiKey, "web");
                 JSONArray knowledgesArray = (JSONArray) JSONUtils.stringToJSON(apiResponse.body());
                 for (Object knowledge : knowledgesArray) {
-                    JSONObject jsonKnowledge = (JSONObject) knowledge;
-                    int year = Integer.parseInt((String) jsonKnowledge.get("year"));
-                    String yearName;
-                    if (year < 0) {
-                        yearName = -year + " BC";
-                    } else {
-                        yearName = year + " AD";
-                    }
-                    String stringKnowledge = jsonKnowledge.get("event") + " happend in year " + yearName + " and month " + jsonKnowledge.get("month") + " and day " + jsonKnowledge.get("day");
-                    stringKnowledge = stringKnowledge.replace("\n", "\\n");
-                    stringKnowledge = stringKnowledge.replace("\"", "\\\"");
+                    String stringKnowledge = getString((JSONObject) knowledge);
                     datas.add(stringKnowledge);
                 }
             }
@@ -87,10 +77,27 @@ public class Main {
             }
         }
 
+        Prompt finalPrompt = getFinalPrompt(knowledges, input);
+        finalPrompt.Print();
+    }
+
+    private static String getString(JSONObject knowledge) {
+        int year = Integer.parseInt((String) knowledge.get("year"));
+        String yearName;
+        if (year < 0) {
+            yearName = -year + " BC";
+        } else {
+            yearName = year + " AD";
+        }
+        String stringKnowledge = knowledge.get("event") + " happend in year " + yearName + " and month " + knowledge.get("month") + " and day " + knowledge.get("day");
+        stringKnowledge = stringKnowledge.replace("\n", "\\n");
+        stringKnowledge = stringKnowledge.replace("\"", "\\\"");
+        return stringKnowledge;
+    }
+
+    private static Prompt getFinalPrompt(DataSet knowledges, String input) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Knowledge knowledge : knowledges.getDatas()) {
-//            System.out.println(knowledge.getEvent());
-//            System.out.println(knowledge.getDistance());
             stringBuilder.append(knowledge.getEvent());
             stringBuilder.append("\\n");
         }
@@ -99,6 +106,6 @@ public class Main {
         promptString += input;
         Prompt finalPrompt = new Prompt(promptString);
         finalPrompt.query("generate", llmModel);
-        finalPrompt.Print();
+        return finalPrompt;
     }
 }
